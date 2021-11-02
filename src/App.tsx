@@ -6,7 +6,7 @@ interface Dog {
 }
 
 function App() {
-  const [dog, setDog] = useState<Dog>();
+  const [dogs, setDogs] = useState<Dog[]>([]);
 
   // const handleGetJoke = async () => {
   //   const response = await fetch(
@@ -19,17 +19,27 @@ function App() {
   const handleGetDog = () => {
     fetch("https://dog.ceo/api/breeds/image/random")
       .then((response) => response.json())
-      .then((jsonBody: Dog) => setDog(jsonBody));
+      .then((jsonBody: Dog) => setDogs((dogs) => [...dogs, jsonBody]));
   };
-
-  if (dog) {
+  function DogPic(dog: Dog) {
     return (
-      <div>
+      <img src={dog.message} alt={dog.message} width="30%" height="auto"></img>
+    )
+  }
+
+  function clear() {
+    return setDogs((dogs) => [])
+  }
+
+  if (dogs[0]) {
+    return (
+      <>
         <h1>🐕 Dog pictures 🐶</h1>
-        <img src={dog.message} alt={dog.message} width="30%" height="auto"></img>
+        {dogs.map(DogPic)}
         <hr />
         <button onClick={handleGetDog}>Get another dog</button>
-      </div>
+        <button onClick={clear}>clear</button>
+      </>
     );
   } else {
     return (
